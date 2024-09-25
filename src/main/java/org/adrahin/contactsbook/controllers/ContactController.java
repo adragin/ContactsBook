@@ -18,8 +18,6 @@ import java.util.UUID;
 public class ContactController {
 
     @Autowired
-    private ContactService contactFactory;
-    @Autowired
     private ContactService contactService;
 
     @GetMapping("/")

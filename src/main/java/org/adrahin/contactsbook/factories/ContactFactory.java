@@ -19,7 +19,7 @@ import static org.adrahin.contactsbook.utils.ConstantsContact.DEFAULT_PHOTO_URL;
 public class ContactFactory {
 
     public Contact createContact(String firstName, String lastName, String email, List<String> phones,
-                                 LocalDate birthday, String address, UUID ownerId) {
+                                 LocalDate birthday, String address, String photo, UUID ownerId) {
         Contact contact = new Contact();
         UUID contactId = UUID.randomUUID();
 
@@ -39,10 +39,15 @@ public class ContactFactory {
 
         contact.setPhones(phonesList);
 
-        try {
-            contact.setPhoto(new URL(DEFAULT_PHOTO_URL));
-        } catch (MalformedURLException e) {
-            contact.setPhoto(null);
+        if (photo != null && !photo.isEmpty()) {
+            try {
+                new URL(photo);         // при неправильном URL получим исключение
+                contact.setPhoto(photo);
+            } catch (MalformedURLException e) {
+                contact.setPhoto(DEFAULT_PHOTO_URL);
+            }
+        } else {
+            contact.setPhoto(DEFAULT_PHOTO_URL);
         }
 
         return contact;

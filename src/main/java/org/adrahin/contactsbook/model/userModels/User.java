@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.adrahin.contactsbook.utils.UtilsUser;
 
@@ -14,6 +15,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @Table(name = "users")
 public class User {
     @Id
@@ -26,11 +28,4 @@ public class User {
     private String userName; // FullName or FirstName
     private LocalDateTime createDate;
     private LocalDateTime lastUpdateDate;
-
-    public User() {
-        this.userId = UUID.randomUUID();
-        this.createDate = LocalDateTime.now();
-        this.lastUpdateDate = LocalDateTime.now();
-    }
-
 }

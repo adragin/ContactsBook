@@ -3,6 +3,7 @@ package org.adrahin.contactsbook.service;
 import org.adrahin.contactsbook.exceptions.EasyUserPasswordException;
 import org.adrahin.contactsbook.exceptions.InvalidLoginPasswordException;
 import org.adrahin.contactsbook.exceptions.UserAlreadyExistsException;
+import org.adrahin.contactsbook.factories.UserFactory;
 import org.adrahin.contactsbook.model.ErrorResponse;
 import org.adrahin.contactsbook.model.userModels.*;
 import org.adrahin.contactsbook.repository.InterfaceUserRepository;
@@ -21,6 +22,8 @@ public class DataBaseUserService implements InterfaceUserService {
     private InterfaceUserRepository userRepository;
     @Autowired
     private UtilsUser utilsUser;
+    @Autowired
+    private UserFactory userFactory;
 
     @Override
     public UserDtoResponse registerUser(UserDtoRegisterRequest userDtoRegister) {
@@ -33,10 +36,12 @@ public class DataBaseUserService implements InterfaceUserService {
             throw new EasyUserPasswordException("Your password is too easy");
         }
 
-        User newUser = new User();
-        newUser.setLogin(userDtoRegister.getLogin());
-        newUser.setPassword(utilsUser.hashPassword(userDtoRegister.getPassword()));
-        newUser.setUserName(userDtoRegister.getName());
+
+        User newUser = userFactory.createUser(
+                userDtoRegister.getLogin(),
+                utilsUser.hashPassword(userDtoRegister.getPassword()),
+                userDtoRegister.getName()
+        );
         newUser.setRole(Roles.USER.getRole());
 
         String token = utilsUser.generateToken(newUser.getLogin(), newUser.getPassword());

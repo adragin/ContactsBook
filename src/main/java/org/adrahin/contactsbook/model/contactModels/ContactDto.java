@@ -1,9 +1,11 @@
 package org.adrahin.contactsbook.model.contactModels;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.adrahin.contactsbook.utils.ConstantsContact;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -12,37 +14,29 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import static org.adrahin.contactsbook.utils.ConstantsContact.DEFAULT_BIRTHDAY;
-
 @Getter
 @Setter
-@Entity
-@Table(name = "contacts")
-public class Contact {
-    @Id
-    private UUID id;
+@AllArgsConstructor
+@NoArgsConstructor
+public class ContactDto {
     private String firstName;
     private String lastName;
     private String email;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "contact_id")
-    private List<Phone> phones;
+    private List<String> phones;  // Список строк вместо списка объектов Phone
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate birthday;
     private String address;
     private String photo;
     private UUID ownerId;
-    private LocalDateTime createDate;
-    private LocalDateTime lastUpdateDate;
 
     public LocalDate getBirthday() {
-        if (birthday.equals(DEFAULT_BIRTHDAY)) {
+        if (birthday.equals(ConstantsContact.DEFAULT_BIRTHDAY)) {
             return null;
         }
         return birthday;
     }
 
     public void setBirthday(LocalDate birthday) {
-        this.birthday = Objects.requireNonNullElse(birthday, DEFAULT_BIRTHDAY);
+        this.birthday = Objects.requireNonNullElse(birthday, ConstantsContact.DEFAULT_BIRTHDAY);
     }
 }
